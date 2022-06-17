@@ -1,28 +1,43 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Lib (
     someFunc
 ) where
 
-import Data.Conduit
-import Data.Conduit.Binary
-import Data.Conduit.List as CL
-import Data.CSV.Conduit
-import Data.Text (Text)
+
+import Control.Applicative
+import qualified Data.ByteString.Lazy as BL
+import Data.Csv
+import qualified Data.Vector as V
+
+
+
+data Compra = Compra
+  { 
+    dia :: !String,
+    produto :: !String,
+    loja :: !String,
+    quantidade :: !Int,
+    unidade :: !String,
+    preco :: !Float,
+    total :: !Float
+  } deriving (Show)
+
+instance FromNamedRecord Compra where
+  parseNamedRecord r = Compra
+    <$> r .: "dia"
+    <*> r .: "produto"
+    <*> r .: "loja"
+    <*> r .: "quantidade"
+    <*> r .: "unidade"
+    <*> r .: "preco"
+    <*> r .: "total"
 
 
 someFunc :: IO ()
--- someFunc = putStrLn "someFunc"
-someFunc = test
-
-
--- Just reverse te columns
--- myProcessor :: Monad m => Conduit (Row Text) m (Row Text)
--- myProcessor = CL.map reverse
-
--- test :: IO ()
--- test = runResourceT $ 
---   transformCSV defCSVSettings 
---                (sourceFile "input.csv") 
---                myProcessor
---                (sinkFile "output.csv")
-
--- test = defCSVSettings (sourceFile "input.csv")
+someFunc = do
+  csvData <- BL.readFile "input.csv"
+  case decodeByName csvData of
+    Left err -> putStrLn err
+    Right (_, v) -> V.forM_ v $ \p ->
+      putStrLn $ produto p ++ " comprado"
