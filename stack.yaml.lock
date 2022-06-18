@@ -11,6 +11,13 @@ packages:
       sha256: b4753f79437f6a4204f6baf4087eb737d6184e38af1bb68925fc13b6f1a6dac1
   original:
     hackage: cassava-0.5.2.0
+- completed:
+    hackage: csv-conduit-0.7.3.0@sha256:cf1a74a35963c744f331b543ebd0627fda2dfb95f957ead250558a883869aaa1,3640
+    pantry-tree:
+      size: 886
+      sha256: b338ab69665a3ca30e400f14aae7b5e05866fb6baf642a622c5f6b00426383fa
+  original:
+    hackage: csv-conduit-0.7.3.0
 snapshots:
 - completed:
     size: 619152

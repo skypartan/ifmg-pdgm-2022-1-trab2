@@ -6,3 +6,4 @@ packages:
 
 extra-deps:
   - cassava-0.5.2.0
+  - csv-conduit-0.7.3.0

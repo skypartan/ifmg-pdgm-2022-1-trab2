@@ -12,6 +12,10 @@ dependencies:
 - cassava
 - bytestring
 - vector
+- csv-conduit
+- conduit
+- conduit-extra
+- containers
 
 library:
   source-dirs: src
