@@ -34,13 +34,12 @@ opcao1 vec maux = do
   prod <- getLine
   
   let result = V.filter ( \compra -> produto compra == prod ) vec 
-
-  let comprado | length result > 0 = "O produto " ++ produto (V.head result) ++ " foi comprado"
-               | otherwise = "O produto nao foi comprado"
+      res | length result > 0 = "O produto '" ++ produto (V.head result) ++ "' foi comprado\n"
+          | otherwise = "O produto '" ++ prod ++ "' nao foi comprado\n"
   
-  print comprado
+  putStrLn res
 
-  menu vec maux
+  menu vec ((res ++ "\n"):maux)
 
 calculaTotal (x:xs) = x + calculaTotal xs 
 calculaTotal [] = 0
@@ -50,13 +49,14 @@ opcao2 vec maux = do
   prod <- getLine
   
   let result = V.filter ( \compra -> produto compra == prod ) vec
-  let soQtd = fmap quantidade result
-
-  let unid | length result > 0 = " " ++ (unidade (V.head result)) ++ "s"
+      soQtd = fmap quantidade result
+      unid | length result > 0 = " " ++ (unidade (V.head result)) ++ "s"
            | otherwise = " unidades"
+      res = "Quantidade comprada do produto '" ++ prod ++ "': " ++ show (calculaTotal (V.toList soQtd)) ++ unid ++ "\n"
 
-  print ("Quantidade comprada do produto: " ++ show (calculaTotal (V.toList soQtd)) ++ unid)
-  menu vec maux
+  putStrLn res
+
+  menu vec ((res ++ "\n"):maux)
 
 
 formatFloatN floatNum numOfDecimals = showFFloat (Just numOfDecimals) floatNum ""
@@ -66,37 +66,35 @@ opcao3 vec maux = do
   prod <- getLine
   
   let result = V.filter ( \compra -> produto compra == prod ) vec
-  let soQtd = fmap total result
+      soQtd = fmap total result
+      res = "Valor total comprado do produto '" ++ prod ++ "': R$ " ++ (formatFloatN (calculaTotal (V.toList soQtd)) 2) ++ "\n"
+
+  putStrLn res
+
+  menu vec ((res ++ "\n"):maux)
 
 
-  print ("Valor total comprado do produto: R$ " ++ (formatFloatN (calculaTotal (V.toList soQtd)) 2))
-  menu vec maux
-
-
-mProdutos (x:[]) = do
-                        print x
-mProdutos (x:xs) = do
-                        print x
-                        mProdutos xs
-mostraProdutos (x:xs) d = do
-                        print ("Produtos comprados em " ++ d ++ ":")
-                        print ""
-                        mProdutos (x:xs)
-mostraProdutos [] d = do
-                  print ("Nada foi comprado em " ++ d)
+mProdutos (x:[]) aux =
+                        (aux ++ x ++ "\n")
+mProdutos (x:xs) aux = 
+                        mProdutos xs (aux ++ x ++ "\n")
+mostraProdutos (x:xs) d = 
+                        mProdutos (x:xs) ("Produtos comprados em " ++ d ++ ":\n")
+mostraProdutos [] d =
+                  ("Nada foi comprado em " ++ d ++ "\n")
 
 opcao4 vec maux = do
   print "OPCAO4"
   prod <- getLine
   
   let result = V.filter ( \compra -> dia compra == prod ) vec
-  let soProdutos = fmap produto result
+      soProdutos = fmap produto result
+      --MostraProdutos sem duplicatas (nub tira as duplicatas)
+      res = mostraProdutos (nub (V.toList soProdutos)) prod
  
-  --MostraProdutos sem duplicatas
-  mostraProdutos (nub (V.toList soProdutos)) prod
-  --mostraProdutos (V.toList soProdutos) prod
+  putStrLn res
                       
-  menu vec maux
+  menu vec ((res ++ "\n"):maux)
 
 
 opcao5 vec maux = do
@@ -104,10 +102,12 @@ opcao5 vec maux = do
   prod <- getLine
   
   let result = V.filter ( \compra -> loja compra == prod ) vec
-  let soTotal = fmap total result
- 
-  print ("Quantidade comprada na loja '" ++ prod ++ "': R$ " ++ (formatFloatN (calculaTotal (V.toList soTotal)) 2))                   
-  menu vec maux
+      soTotal = fmap total result
+      res = "Quantidade comprada na loja '" ++ prod ++ "': R$ " ++ (formatFloatN (calculaTotal (V.toList soTotal)) 2) ++ "\n"
+
+  putStrLn res
+
+  menu vec ((res ++ "\n"):maux)
 
 
 inverteL (x:xs) aux = inverteL xs (x:aux)
@@ -131,19 +131,19 @@ pegaMaisComprados (x:xs) (y:ys) maior items
 
 pegaMaisComprados [] [] _ items = items
 
-pProds [] = print ""
-pProds (x:[]) = do
-  print x
-pProds (x:xs) = do
-  print x
-  pProds xs
+pProds [] aux = aux
 
-printProds (x:xs) = do
+pProds (x:[]) aux =
+  (aux ++ x ++ "\n")
+
+pProds (x:xs) aux =
+  pProds xs (aux ++ x ++ "\n")
+
+printProds (x:xs) =
   let prePrint | length (x:xs) == 0 = "Nao foi comprado nenhum produto ainda"
-               | length (x:xs) == 1 = "O produto mais comprado foi: "
-               | length (x:xs) > 1 = "Houve empate. Os produtos mais comprados foram: "
-  print prePrint
-  pProds (x:xs)
+               | length (x:xs) == 1 = "O produto mais comprado foi: \n"
+               | length (x:xs) > 1 = "Houve empate. Os produtos mais comprados foram: \n"
+  in pProds (x:xs) prePrint
 
 
 opcao6 vec maux = do
@@ -151,10 +151,32 @@ opcao6 vec maux = do
   
   let produtosDistintos = (nub (V.toList (fmap produto vec)))
       qtdTotalPorProduto = calcProdutos produtosDistintos vec []
-  
-  printProds $ pegaMaisComprados produtosDistintos qtdTotalPorProduto 0 []
+      res = (printProds $ pegaMaisComprados produtosDistintos qtdTotalPorProduto 0 []) 
 
-  menu vec maux
+  putStrLn res
+
+  menu vec ((res ++ "\n "):maux)
+
+inverteB :: [[a]] -> [[a]] -> [[a]]
+inverteB (x:xs) aux = inverteB xs (x:aux)
+inverteB [] aux = aux
+
+inverteBuffer :: [[a]] -> [[a]]
+inverteBuffer (x:xs) = inverteB (x:xs) [[]]
+inverteBuffer [] = []
+
+printRelat (x:xs) aux = printRelat xs (aux ++ x)
+printRelat [] aux = putStrLn aux
+
+opcao7 vec maux = do
+  print "OPCAO7"
+  
+  let relatorio = inverteBuffer maux
+
+  -- aqui que vai escrever num arquivo
+  printRelat relatorio ""
+
+  menu vec []
 
 --menu :: IO ()
 menu vec maux = do
@@ -169,6 +191,7 @@ menu vec maux = do
         | op == "4" = opcao4 vec maux
         | op == "5" = opcao5 vec maux
         | op == "6" = opcao6 vec maux
+        | op == "7" = opcao7 vec maux
         | otherwise = menu vec maux 
   
   action
@@ -185,5 +208,4 @@ main = do
       print "\n\n"
       menu rows []
 
--- nos prints colocar o nome do produto tb?
--- colocar prints depois dos resultados pra ter um espacinho do menu?
+-- pesquisar como escrever num arquivo texto e como pegar parametro da linha de comando
