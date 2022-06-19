@@ -2,7 +2,7 @@ dia,produto,loja,quantidade,unidade,preco,total
 01-09-2021,"Cimento Campeao CPII","Loja do Ze",20,saco,28.00,560.00
 01-09-2021,"Cimento Campeao CPII","Loja do Ze",20,saco,28.00,560.00
 01-09-2021,"Tubo de PVC","Loja do Ze",20,metro,5.00,100.00
-02-09-2021,"Cimento Campeão CPII","Loja do Ze",20,saco,28.00,560.00
+02-09-2021,"Cimento Campeao CPII","Loja do Ze",20,saco,28.00,560.00
 03-09-2021,"Jogo de Piso","Loja 5000",10,pacote,70.00,700.00
 03-09-2021,"Pia de cozinha","Loja 5000",1,unidade,350.00,350.00
 04-09-2021,"Madeira","Loja Madera",5,engradado,50.00,250.00
@@ -12,4 +12,4 @@ dia,produto,loja,quantidade,unidade,preco,total
 08-09-2021,"Madeira","Loja Madera",5,engradado,50.00,250.00
 24-09-2021,"Pacote de arroz","Supermercado",4,saco,12.00,48.00
 24-09-2021,"Pacote de farinha","Supermercado",62,saco,12.00,48.00
-01-09-2021,teste,Loja do Zé,20,saco,28.00,560.00
+01-09-2021,"teste","Loja do Ze",20,saco,28.00,560.00

@@ -19,6 +19,8 @@ source-repository head
   location: https://github.com/skypartan/paradigmas-t2
 
 library
+  exposed-modules:
+      Lib
   other-modules:
       Paths_t2
   hs-source-dirs:
