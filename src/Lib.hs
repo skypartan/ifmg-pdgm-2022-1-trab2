@@ -180,7 +180,21 @@ opcao7 vec outFile maux = do
   menu vec outFile []
 
 
--- TODO(lucasgb): Custo total e custo por dia
+opcao8 :: Vector Compra -> String -> [a] -> IO ()
+opcao8 vec outFile maux = do
+  print "Custo por dia"
+  putStr "Informe a data> "
+  d <- getLine
+
+  let result =  V.filter ( \compra -> dia compra == d ) vec
+      filt = V.map total result
+      tot = sum filt
+
+  putStrLn ("Foram comprados " ++ formatFloatN tot 2 ++ " no dia " ++ d)
+
+  -- TODO(lucasgb): Custo total e custo por dia
+
+  menu vec outFile []
 
 --menu :: IO ()
 menu vec outFile maux = do
@@ -196,6 +210,7 @@ menu vec outFile maux = do
         | op == "5" = opcao5 vec outFile maux
         | op == "6" = opcao6 vec outFile maux
         | op == "7" = opcao7 vec outFile maux
+        | op == "8" = opcao8 vec outFile maux
         | otherwise = menu vec outFile maux
 
   action
