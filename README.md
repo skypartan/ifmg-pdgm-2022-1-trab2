@@ -1,11 +1,15 @@
 #Para executar o codigo:
- Utilize o .exe gerado.
- O arquivo csv de entrada deve estar na mesma pasta que o .exe
- Para rodar o exe utilize o seguinte comando no terminal:
+ 
+ É necessária a instalação da ferramenta Stack, parte do toolkit oficial para desenvolvimento
+ em haskell.
+ Com o Stack instalado é possível realizar a compilação do projeto utilizando o comando
+ $ stack build
+ ou até mesmo a execução direta utilizando o
+ $ stack run
+ Com isso o projeto pode ser executado como
+ $ stack run <"caminho arquivo de entrada"> <"caminho arquivo saida">
 
-	<nome>.exe <arquivoentrada.extensao> <arquivosaida.extensao>
-
- Voce tambem pode omitir os parametros <arquivoentrada.extensao> e <arquivosaida.extensao>.
+ Voce tambem pode omitir os parametros <"caminho arquivo de entrada"> e <"caminho arquivo saida">.
  Nesse caso, o programa procurará por um arquivo de entrada com nome 'input.csv' e salvará
  as respostas das consultas num arquivo de nome 'output.txt'. Caso nao haja um arquivo de 
  entrada o programa falhará. Caso nao haja um arquivo de entrada com o nome correto, o programa
