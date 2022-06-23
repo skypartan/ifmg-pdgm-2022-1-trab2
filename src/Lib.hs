@@ -30,7 +30,7 @@ data Compra = Compra
 
 
 opcao1 vec outFile maux = do
-  print "OPCAO1"
+  putStrLn "Digite o nome do produto: "
   prod <- getLine
 
   let result = V.filter ( \compra -> produto compra == prod ) vec
@@ -45,7 +45,7 @@ calculaTotal (x:xs) = x + calculaTotal xs
 calculaTotal [] = 0
 
 opcao2 vec outFile maux = do
-  print "OPCAO2"
+  putStrLn "Digite o nome do produto: "
   prod <- getLine
 
   let result = V.filter ( \compra -> produto compra == prod ) vec
@@ -62,7 +62,7 @@ opcao2 vec outFile maux = do
 formatFloatN floatNum numOfDecimals = showFFloat (Just numOfDecimals) floatNum ""
 
 opcao3 vec outFile maux = do
-  print "OPCAO3"
+  putStrLn "Digite o nome do produto: "
   prod <- getLine
 
   let result = V.filter ( \compra -> produto compra == prod ) vec
@@ -84,7 +84,7 @@ mostraProdutos [] d =
                   ("Nada foi comprado em " ++ d ++ "\n")
 
 opcao4 vec outFile maux = do
-  print "OPCAO4"
+  putStrLn "Digite a data desejada no formato dd-mm-AAAA"
   prod <- getLine
 
   let result = V.filter ( \compra -> dia compra == prod ) vec
@@ -98,7 +98,7 @@ opcao4 vec outFile maux = do
 
 
 opcao5 vec outFile maux = do
-  print "OPCAO5"
+  putStrLn "Digite o nome da loja: "
   prod <- getLine
 
   let result = V.filter ( \compra -> loja compra == prod ) vec
@@ -147,7 +147,6 @@ printProds (x:xs) =
 
 
 opcao6 vec outFile maux = do
-  print "OPCAO6"
 
   let produtosDistintos = nub (V.toList (fmap produto vec))
       qtdTotalPorProduto = calcProdutos produtosDistintos vec []
@@ -169,40 +168,64 @@ printRelat (x:xs) aux = printRelat xs (aux ++ x)
 printRelat [] aux = putStrLn aux
 
 opcao7 vec outFile maux = do
-  print "OPCAO7"
-
+  putStrLn "Salvando respostas em um relatorio..."
+  putStrLn "relatorio:"
   let relatorio = inverteBuffer maux
 
   -- aqui que vai escrever num arquivo
   printRelat relatorio ""
-  writeFile outFile (concat maux)
 
+  let tryprint | length (concat maux) > 0 = do
+                                            writeFile outFile (concat maux)
+                                            putStrLn ("Salvo com sucesso no arquivo "++ outFile ++ "\n")
+               | otherwise = putStrLn "Nao ha respostas a serem salvas em um arquivo. Tente apos fazer alguma consulta\n"
+  tryprint
   menu vec outFile []
 
 
-opcao8 :: Vector Compra -> String -> [a] -> IO ()
+opcao8 :: Vector Compra -> String -> [[Char]] -> IO ()
 opcao8 vec outFile maux = do
-  print "Custo por dia"
-  putStr "Informe a data> "
+  putStrLn "Informe a data no formato dd-mm-AAAA:"
   d <- getLine
 
   let result =  V.filter ( \compra -> dia compra == d ) vec
       filt = V.map total result
       tot = sum filt
+      res = "Foram comprados R$ " ++ formatFloatN tot 2 ++ " no dia " ++ d ++ "\n"
 
-  putStrLn ("Foram comprados " ++ formatFloatN tot 2 ++ " no dia " ++ d)
+  putStrLn res
 
-  -- TODO(lucasgb): Custo total e custo por dia
 
-  menu vec outFile []
+  menu vec outFile ((res ++ "\n "):maux)
+  
+
+opcao9 :: Vector Compra -> String -> [[Char]] -> IO ()
+opcao9 vec outFile maux = do
+
+  let soTotal = fmap total vec
+      res = "O custo total eh de: R$ " ++ formatFloatN (sum soTotal) 2 ++ "\n"
+
+  putStrLn res
+
+  menu vec outFile ((res ++ "\n "):maux)
 
 --menu :: IO ()
 menu vec outFile maux = do
-  print "Digite uma opcao: "
+  putStrLn $ "**********MENU**********\n" ++
+            "Digite o numero de uma das seguintes opcoes ou digite 'sair' para encerrar o programa: \n" ++
+            "1 - Consultar se um produto foi comprado.\n" ++
+            "2 - Consultar a quantidade total comprada de um produto.\n" ++
+            "3 - Consultar o valor total comprado de um produto.\n" ++
+            "4 - Consultar quais produtos foram comprados em uma determinada data.\n" ++
+            "5 - Consultar qual o total de compras em uma determinada loja.\n" ++
+            "6 - Consultar qual foi o produto mais comprado.\n" ++
+            "7 - Salvar as respostas das consultas em um arquivo texto.\n" ++
+            "8 - Consultar o custo total com produtos em determinado dia.\n" ++
+            "9 - Consultar o custo total das compras."
 
   op <- getLine
   let action
-        | op == "sair" = print "Finalizado com sucesso"
+        | op == "sair" = putStrLn "Finalizado com sucesso"
         | op == "1" = opcao1 vec outFile maux
         | op == "2" = opcao2 vec outFile maux
         | op == "3" = opcao3 vec outFile maux
@@ -211,6 +234,7 @@ menu vec outFile maux = do
         | op == "6" = opcao6 vec outFile maux
         | op == "7" = opcao7 vec outFile maux
         | op == "8" = opcao8 vec outFile maux
+        | op == "9" = opcao9 vec outFile maux
         | otherwise = menu vec outFile maux
 
   action
@@ -231,5 +255,5 @@ main = do
     Left string -> fail string
     Right (_header, rows) -> do
       print (rows :: Vector Compra)
-      print "\n\n"
+      putStrLn "\nBanco de dados carregado\n"
       menu rows outFile []
