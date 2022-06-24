@@ -1,3 +1,6 @@
+Integrantes: Thomas do Vale - Matricula: 0015131 
+             Lucas Guimarães Bernardes - Matricula: 0015122
+
 #Para executar o codigo:
  
  É necessária a instalação da ferramenta Stack, parte do toolkit oficial para desenvolvimento
@@ -11,8 +14,7 @@
 
  Voce tambem pode omitir os parametros <"caminho arquivo de entrada"> e <"caminho arquivo saida">.
  Nesse caso, o programa procurará por um arquivo de entrada com nome 'input.csv' e salvará
- as respostas das consultas num arquivo de nome 'output.txt'. Caso nao haja um arquivo de 
- entrada o programa falhará. Caso nao haja um arquivo de entrada com o nome correto, o programa
+ as respostas das consultas num arquivo de nome 'output.txt'. Caso nao haja um arquivo de entrada com o nome correto, o programa
  falhará ao tentar ser executado. O arquivo de entrada pode ter qualquer extensão, mas deve
  estar formatado internamente como um csv.
 
